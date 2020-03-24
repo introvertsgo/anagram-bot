@@ -1,4 +1,3 @@
-#!/home/kev/dispy/venv/bin/python
 import discord
 from discord.ext import commands, tasks
 from itertools import cycle
@@ -6,14 +5,16 @@ import random
 from anagram import anagram
 import connector
 import math
-conn = connector.create_connection("/home/kev/dispy/scores.db")
 
-f = open("/home/kev/dispy/words.txt","r")
+conn = connector.create_connection("scores.db")
+# create a connection to the scores database
+
+f = open("words.txt","r")
 py_list = f.readlines()
 new_list = []
 for word in py_list:
     if len(word) > 5:
-        new_list.append(word)
+        new_list.append(word.lower())
 random.shuffle(new_list)
 py_act = cycle(new_list)
 
@@ -23,15 +24,8 @@ An Anagram bot that tracks your scores.
 
 Use ?guess {your guess} to guess the anagram in the status
 '''
+
 bot = commands.Bot(command_prefix='?', description=description)
-"""
-async def change_word():
-    global current_word
-    r = requests.get('https://random-word-api.herokuapp.com/word?number=10')
-    words = r.json()
-    current_word = words[0]
-    await bot.change_presence(status=discord.Status.online, activity=discord.Game(name=anagram(words[0])))
-"""
 
 
 async def change_word():
@@ -48,6 +42,7 @@ async def change_word():
 async def change_loop():
     global current_word
     await change_word()
+
 
 @bot.event
 async def on_ready():
